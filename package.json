@@ -1,0 +1,31 @@
+{
+  "name": "tz-inventory",
+  "version": "1.0.0",
+  "description": "TZ Services to CRUD video listings, subscriptions, and users",
+  "main": "server/index.js",
+  "engines": {
+    "node": "9.4.0"
+  },
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "build": "babel input.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archana-nayak/tz-inventory.git"
+  },
+  "author": "archana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/archana-nayak/tz-inventory/issues"
+  },
+  "homepage": "https://github.com/archana-nayak/tz-inventory#readme",
+  "dependencies": {
+    "bookshelf": "^0.12.1",
+    "express": "^4.16.2",
+    "knex": "^0.14.2",
+    "nodemon": "^1.14.11",
+    "pg": "^7.4.1"
+  }
+}

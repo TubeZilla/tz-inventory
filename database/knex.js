@@ -7,14 +7,13 @@ var developmentConfig = {
     password : 'abc123',
     database : 'invdb',
     charset  : 'utf8'
-  }
+  } //process.env.PG_CONNECTION_STRING
 };
 
 var knex = require('knex')(developmentConfig);
-var bookshelf = require('bookshelf')(knex);
+// var bookshelf = require('bookshelf')(knex);
 
 module.exports = 
 {
-  bookshelf: bookshelf,
   knex: knex
 };

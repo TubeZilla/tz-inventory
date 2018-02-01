@@ -13,8 +13,6 @@ const generateUsers = (number, callback) => {
   var n = 1000;
   while(n-- >= 0) {
     generateUserData((err, users) => {
-      // writeFile(path.join(basePath, 'users' + count + '.json'), JSON.stringify(users));
-      // writeFile(path.join(basePath, 'userids' + count + '.json'), JSON.stringify(userIds));
       db.createUser(users, (err, id) => {
         if (err) {
           console.log(err);
@@ -44,6 +42,31 @@ const generateUserData = (callback) => {
   callback(null, users);
 };
 
+const createChannels = () => {
+  db.selectUsers((records) => {
+    let publishers = records;
+    console.log(publishers.length);
+    for (var i = 0; i < publishers.length; i++) { //
+      let channels = [];
+      for (var j = 0; j < 10  ; j++) { 
+        var channel = {};
+        channel['channel_id'] = randomstring.generate(12);
+        channel['channel_name'] = faker.commerce.productName();
+        channel['publisher_id'] = publishers[i]['userid'];
+        channels.push(channel);
+      }  
+      db.createChannels(channels, (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(result);
+        }
+      });
+    }
+  });
+};
+
+//helper function to write to file
 const writeFile = (path, data, opts='utf8') => {
   console.log('herein write file');
   new Promise((resolve, reject) => {
@@ -63,6 +86,7 @@ const writeFile = (path, data, opts='utf8') => {
 
 module.exports = {
   gu: generateUsers,
+  createChannels: createChannels
   // dg: nameEmailUniqueIdGenerator,
   // videosGenerator: videosGenerator,
   // writeChannelsToFile: writeChannelsToFile

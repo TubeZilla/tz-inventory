@@ -7,7 +7,11 @@ var developmentConfig = {
     password : 'abc123',
     database : 'invdb',
     charset  : 'utf8'
-  } //process.env.PG_CONNECTION_STRING
+  }, //process.env.PG_CONNECTION_STRING
+  pool: {
+    "min": 2,
+    "max": 20
+  }
 };
 
 var knex = require('knex')(developmentConfig);

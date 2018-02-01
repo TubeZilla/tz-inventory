@@ -44,13 +44,13 @@ knex.schema.createTableIfNotExists('channels', function(table) {
   table.increments('id');
   table.string('channel_id');
   table.string('publisher_id');
-  table.string('publisher_name');
+  table.string('channel_name');
 })
 .then(function() {
 
 });
 
-knex.schema.createTableIfNotExists('channel_subscriptions', function(table) {
+knex.schema.createTableIfNotExists('channels_subscriptions', function(table) {
   table.increments('id');
   table.string('channel_id');
   table.string('publisher_id');

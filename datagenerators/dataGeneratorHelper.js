@@ -2,6 +2,7 @@ const fs = require('fs');
 // const uuidv4 = require('uuid/v4'); 
 const path = require('path');
 const basePath = path.join(__dirname, '../datagenerators/');
+const fileAssets = ['videosubsetData.json'];
 const Promise = require('bluebird');
 const faker = require('faker');
 var randomstring = require("randomstring");
@@ -66,6 +67,45 @@ const createChannels = () => {
   });
 };
 
+const createVideos = () => {
+  var rstream = fs.createReadStream(path.join(__dirname,'videosubsetData.json'));
+  var videosubsets = [];
+  rstream.on('data', (chunk) => {
+    videosubsets += chunk;
+  })
+  .on('end', () => {
+    videosubsets = JSON.parse(videosubsets);
+    console.log('videosubsets.length ', typeof videosubsets);
+  });
+  db.selectChannels(records => {
+    console.log('count of records ', records.length);
+    for (var i = 0; i < 2; i++) { 
+      let videos = [];
+      for (var j = 0; j < records.length; j++) {//
+        var videosubset = videosubsets[~~(videosubsets.length * Math.random())]
+        // console.log(videosubset);
+        var video = {};
+        video['video_id'] = randomstring.generate(12);
+        video['channel_id'] = records[i]['channel_id'];
+        video['publisher_id'] = records[i]['publisher_id'];
+        video['video_title'] = videosubset['video_title'];
+        video['video_description'] = videosubset['video_description'];
+        video['video_length_in_mins'] = videosubset['video_length_in_mins'];
+        video['video_cdn_link'] = videosubset['video_cdn_link'];
+        video['video_s3_link'] = videosubset['video_s3_link '];
+        videos.push(video);
+      }
+      db.createVideos(videos, (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(result);
+        }
+      });
+    }  
+  });
+};
+
 //helper function to write to file
 const writeFile = (path, data, opts='utf8') => {
   console.log('herein write file');
@@ -86,7 +126,8 @@ const writeFile = (path, data, opts='utf8') => {
 
 module.exports = {
   gu: generateUsers,
-  createChannels: createChannels
+  createChannels: createChannels,
+  createVideos: createVideos
   // dg: nameEmailUniqueIdGenerator,
   // videosGenerator: videosGenerator,
   // writeChannelsToFile: writeChannelsToFile

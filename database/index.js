@@ -31,6 +31,13 @@ const selectUsers = (callback) => {
     callback(records);
   });
 };
+//272565 
+const selectChannels = (callback) => {
+  knex.from('channels').select('channel_id', 'publisher_id').whereBetween('id', [272565 , 1169450])
+  .then((records) => {
+    callback(records);
+  });
+};
 
 const createChannels = (params, callback) => {
   knex.insert(params).into('channels')
@@ -40,11 +47,40 @@ const createChannels = (params, callback) => {
   });
 };
 
+const createVideos = (params, callback) => {
+  // var chunkSize = 1000;
+  console.log('params.length ', params.length);
+  // knex.transaction(function(tr) {
+  //   return knex.batchInsert('videos', params)
+  //     .transacting(tr)
+  //   })
+  //   .then(function(ids) { 
+  //     console.log('transaction completed');
+  //     callback(null, ids.length);
+  //   })
+  //   .catch(function(error) { 
+  //     console.log('error in transaction');
+  //     callback(error);
+  //   });
+  knex.batchInsert('videos', params)
+    .returning('id')
+    .then(function(ids) { 
+       console.log(ids);
+       callback(null, ids.length);
+     })
+    .catch(function(error) {
+      console.log(error); 
+      callback(error);
+    });
+};
+
 module.exports = {
   createUser: createUser,
   createVideo: createVideo,
   selectUsers: selectUsers,
-  createChannels: createChannels
+  createChannels: createChannels,
+  selectChannels: selectChannels,
+  createVideos: createVideos
 };
 
 // var rows = [{...}, {...}];

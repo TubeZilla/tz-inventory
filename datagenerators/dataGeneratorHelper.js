@@ -213,3 +213,7 @@ module.exports = {
 
 // select * from channels_subscriptions where subscriber_id = userid
 // and channel_id in (select channel_id from videos where video_id = videoid);
+
+// select * from channels_subscriptions where subscriber_id = useridX9SY9sFnlOMX
+// and channel_id = channelId;HFcmVS5AdIBG
+// select 1 from channels_subscriptions where subscriber_id = 'HFcmVS5AdIBG' and channel_id = 'HFcmVS5AdIBG';

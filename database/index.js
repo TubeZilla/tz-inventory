@@ -43,24 +43,25 @@ const createVideo = (params, start, end, callback) => {
 
 /**
  * Subscribers have been picked from another subset of users
- * that have ids between 610000 and 957886.
+ * that have ids between 610000 and 1506886 [957886] - //[610000, 1506886]).
  * Publishers have been picked from the range of 
  * [555200, 610000]. This is to avoid equal ids for
  * subscribers and publishers though in reality subscribers
  * can be publishers and publishers can be subscribers to other's
- * channels.
+ * channels. I am trying a second range of subscribers with id's
+ * 1506887 and 3845786 to fill the channels table [1506887, 3845786]).
  */
-const selectUsers = (callback) => {
-  knex.from('users').select('userid').whereBetween('id', [610000, 1506886])//[555200, 610000])
+const selectUsers = (callback) => {                       //publishers  
+  knex.from('users').select('userid').whereBetween('id', [555200, 610000])
   .then((records) => {
     callback(records);
   });
 };
 /**
- * starting index: 272565; the rest not selected 
+ * starting index: 272565; the rest not selected
  * */ 
 const selectChannels = (callback) => {
-  knex.from('channels').select('channel_id', 'publisher_id').whereBetween('id', [272565 , 1169450])
+  knex.from('channels').select('channel_id', 'publisher_id').whereBetween([272565 , 1169450])
   .then((records) => {
     callback(records);
   });
@@ -75,7 +76,6 @@ const createChannels = (params, callback) => {
 };
 
 const createVideos = (params, callback) => {
-  // var chunkSize = 1000;
   console.log('params.length ', params.length);
   knex.batchInsert('videos', params)
     .returning('id')
@@ -116,6 +116,37 @@ const createSubscribersForChannels = (params, callback) => {
   });
 };
 
+/**
+ * 
+ * @param params is of the type {video_id: ''}  
+ * @param {*} callback 
+ */
+const selectVideoFromVideos = (params, callback) => {
+  knex.select('*')
+  .from('videos')
+  .where(params)
+  .then(function(rows) {
+    callback(rows);
+  })
+  .catch(function(error) { console.error(error); });
+};
+
+/**
+ * 
+ * @param {*} params 
+ * {channel_id: 'channelid', subscriber_id:  'Userid'}
+ * @param {*} callback 
+ */
+const selectSubscribersForChannels = (params, callback) => {
+  knex.select(1)
+  .from('channels_subscriptions')
+  .where(params)
+  .then(function(rows) {
+    callback(rows);
+  })
+  .catch(function(error) { console.error(error); });
+};
+
 module.exports = {
   createUser: createUser,
   createVideo: createVideo,
@@ -124,22 +155,7 @@ module.exports = {
   selectChannels: selectChannels,
   createVideos: createVideos,
   createAds: createAds,
-  createSubscribersForChannels: createSubscribersForChannels
+  createSubscribersForChannels: createSubscribersForChannels,
+  selectVideoFromVideos: selectVideoFromVideos,
+  selectSubscribersForChannels: selectSubscribersForChannels
 };
-
-// var rows = [{...}, {...}];
-// var chunkSize = 1000;
-// knex.batchInsert('channels', params, chunkSize)
-//   .returning('id')
-//   .then(function(ids) { 
-//      callback(null, ids.length);
-//    })
-//   .catch(function(error) { 
-//     callback(error);
-//   });
-// knex.transaction(function(tr) {
-//   return knex.batchInsert('TableName', rows, chunkSize)
-//     .transacting(tr)
-//   })
-//   .then(function() { ... })
-//   .catch(function(error) { ... });

@@ -30,6 +30,7 @@
     "nodemon": "^1.14.11",
     "pg": "^7.4.1",
     "pg-copy-streams": "^1.2.0",
-    "randomstring": "^1.1.5"
+    "randomstring": "^1.1.5",
+    "redis": "^2.8.0"
   }
 }

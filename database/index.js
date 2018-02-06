@@ -28,16 +28,16 @@ const createUser = (params, callback) => {
   });
 };
 
-//params is an array of json that has already been mapped
-//to videos record column
+//params is an json whose values have been mapped
+//to columns in the videos table in the database
 const createVideo = (params, start, end, callback) => {
-  let inserts = [];
-  for (var i = start; i < end; i++) {
-    inserts.push(params[i]);
-  }
-  knex.insert(inserts).into('videos')
+  knex.insert(params).into('videos')
   .then((id) => {
     callback(null, id);
+  })
+  .catch((err) => {
+    console.log(err);
+    callback(err);
   });
 };
 
@@ -75,6 +75,12 @@ const createChannels = (params, callback) => {
   });
 };
 
+/**
+ * expects an array of video objects, used
+ * for batch inserts
+ * @param {*} params 
+ * @param {*} callback 
+ */
 const createVideos = (params, callback) => {
   console.log('params.length ', params.length);
   knex.batchInsert('videos', params)
@@ -103,6 +109,18 @@ const createAds = (params, callback) => {
   });
 };
 
+const getAds = (callback) => {
+  console.log('In getAds');
+  knex.select('ad_id', 'ad_text', 'ad_video_cdn_link', 'ad_length_in_secs').from('ads')
+  .then((rows) => {
+    callback(null, rows);
+  })
+  .catch((err) => {
+    console.log(err);
+    callback(err);
+  });
+};
+
 const createSubscribersForChannels = (params, callback) => {
   knex.batchInsert('channels_subscriptions', params)
   .returning('id')
@@ -117,34 +135,50 @@ const createSubscribersForChannels = (params, callback) => {
 };
 
 /**
- * 
+ * Given a video id, give the video metadata 
+ * associated with it
  * @param params is of the type {video_id: ''}  
  * @param {*} callback 
  */
-const selectVideoFromVideos = (params, callback) => {
-  knex.select('*')
+const getVideo = (params, callback) => {
+  console.log('params ', params);
+  knex.select('video_id', 'video_title', 'channel_id', 'video_cdn_link', 'video_length_in_mins')
   .from('videos')
   .where(params)
   .then(function(rows) {
-    callback(rows);
+    console.log('video from db ', rows[0]);
+    callback(null, rows[0]);
   })
-  .catch(function(error) { console.error(error); });
+  .catch(function(error) {
+    console.error(error);
+  });
 };
 
 /**
- * 
- * @param {*} params 
+ * Given a channelid and subscriber id check if user
+ * is subscribed for the channel
+ * @param {*} params are of the form
  * {channel_id: 'channelid', subscriber_id:  'Userid'}
  * @param {*} callback 
  */
-const selectSubscribersForChannels = (params, callback) => {
+const getSubscriber = (params, callback) => {
+  console.log('params ', params);
   knex.select(1)
   .from('channels_subscriptions')
   .where(params)
   .then(function(rows) {
-    callback(rows);
+    console.log('rows ', rows);
+    callback(null, rows);
   })
   .catch(function(error) { console.error(error); });
+};
+
+const createSubscriberForChannel = (params, callback) => {
+  knex.insert(params).into('channels_subscriptions')
+  .then((id) => {
+    console.log(id);
+    callback(null, id);
+  });
 };
 
 module.exports = {
@@ -156,6 +190,9 @@ module.exports = {
   createVideos: createVideos,
   createAds: createAds,
   createSubscribersForChannels: createSubscribersForChannels,
-  selectVideoFromVideos: selectVideoFromVideos,
-  selectSubscribersForChannels: selectSubscribersForChannels
+  getVideo: getVideo,
+  getAds: getAds,
+  getSubscriber: getSubscriber,
+  createVideo: createVideo,
+  createSubscriberForChannel: createSubscriberForChannel
 };

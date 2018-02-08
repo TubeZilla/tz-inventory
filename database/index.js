@@ -30,7 +30,7 @@ const createUser = (params, callback) => {
 
 //params is an json whose values have been mapped
 //to columns in the videos table in the database
-const createVideo = (params, start, end, callback) => {
+const createVideo = (params, callback) => {
   knex.insert(params).into('videos')
   .then((id) => {
     callback(null, id);

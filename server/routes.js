@@ -5,7 +5,8 @@ router.get('/video/:videoId', controller.videos.get);
 router.post('/video/create', controller.videos.post);
 // router.get('/user/create', controller.users.get);
 router.get('/user/subscribed/:subscriberId/channel/:channelId', controller.subscriptions.get);
-router.post('/user/subscribe/:subscriberId/channel/:channelId', controller.subscriptions.post);
+router.post('/user/subscribe', controller.subscriptions.post);
+
 
 module.exports = router;
 

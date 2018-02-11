@@ -1,3 +1,4 @@
+const nr = require('newrelic');
 const express = require('express');
 const path = require('path');
 const parser = require('body-parser');
@@ -6,13 +7,31 @@ const dataGenerator = require(path.join(__dirname, '../datagenerators/dataGenera
 const filePath = path.join(__dirname, '../datagenerators/dataGeneratorHelper.js');
 const db = require('../database/index.js');
 const router = require('./routes.js');
-var controller = require('./controllers');
+const controller = require('./controllers');
+
+//Add Morgan
 
 const app = express();
 
 app.use(parser.json());
-app.use('/inventory', router);
+app.use('/api', router);
 
-app.listen(3000, () => {
-  console.log('listening on port 3000!');
+controller.loadAds((err, result) => {
+  if (err) {
+    console.log(err);
+  } else {
+    app.emit('started');
+  }
 });
+
+let server = app.listen(3000, () => {
+  console.log('listening on port 3000!');  
+});
+
+const stop = (done) => {
+  server.close();
+  done();
+}
+
+exports = module.exports = app;//{app: app,
+                            // stop: stop};

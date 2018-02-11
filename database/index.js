@@ -33,6 +33,7 @@ const createUser = (params, callback) => {
 const createVideo = (params, callback) => {
   knex.insert(params).into('videos')
   .then((id) => {
+    console.log('after insert in db', id);
     callback(null, id);
   })
   .catch((err) => {
@@ -42,10 +43,11 @@ const createVideo = (params, callback) => {
 };
 
 /**
+ * Publishers have been picked from the range of 
+ * [555200, 610000].
  * Subscribers have been picked from another subset of users
  * that have ids between 610000 and 1506886 [957886] - //[610000, 1506886]).
- * Publishers have been picked from the range of 
- * [555200, 610000]. This is to avoid equal ids for
+ * This is to avoid equal ids for
  * subscribers and publishers though in reality subscribers
  * can be publishers and publishers can be subscribers to other's
  * channels. I am trying a second range of subscribers with id's
@@ -86,7 +88,7 @@ const createVideos = (params, callback) => {
   knex.batchInsert('videos', params)
     .returning('id')
     .then(function(ids) { 
-       console.log(ids);
+      //  console.log(ids);
        callback(null, ids.length);
      })
     .catch(function(error) {
@@ -141,12 +143,12 @@ const createSubscribersForChannels = (params, callback) => {
  * @param {*} callback 
  */
 const getVideo = (params, callback) => {
-  console.log('params ', params);
+  // console.log('params ', params);
   knex.select('video_id', 'video_title', 'channel_id', 'video_cdn_link', 'video_length_in_mins')
   .from('videos')
   .where(params)
   .then(function(rows) {
-    console.log('video from db ', rows[0]);
+    // console.log('video from db ', rows[0]);
     callback(null, rows[0]);
   })
   .catch(function(error) {

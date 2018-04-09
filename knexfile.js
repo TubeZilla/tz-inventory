@@ -23,7 +23,7 @@ module.exports = {
   development: {  
     client: 'pg',
     connection: {
-      host     : 'localhost',
+      host     : 'docker.for.mac.host.internal',
       port     : '5432',
       user     : 'involtp',
       password : 'abc123',

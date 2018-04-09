@@ -10,7 +10,7 @@ config:
       arrivalRate: 10
       rampTo: 20
       name: "Warm up the application"
-    - duration: 600
+    - duration: 300
       arrivalRate: 50
       name: "Sustained max load"
   defaults:
@@ -20,3 +20,5 @@ scenarios:
   - flow:
     - get:
         url: "/api/video/:{{video_id}}"
+
+#artillery run artillery-test.yml

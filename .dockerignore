@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+channels_subscribers.csv
+notes.txt
+users.csv
+videoids.csv
+videos.csv
+psqlHelp.txt
+dump.rdb

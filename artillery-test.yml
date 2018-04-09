@@ -1,0 +1,22 @@
+config:
+  target: 'http://localhost:3000'
+  payload:
+      # path is relative to the location of the test script
+      path: "./videoids.csv"
+      fields:
+        - "video_id"
+  phases:
+    - duration: 120
+      arrivalRate: 10
+      rampTo: 20
+      name: "Warm up the application"
+    - duration: 600
+      arrivalRate: 50
+      name: "Sustained max load"
+  defaults:
+    # headers:
+    #   x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - flow:
+    - get:
+        url: "/api/video/:{{video_id}}"

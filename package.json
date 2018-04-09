@@ -1,0 +1,46 @@
+{
+  "name": "tz-inventory",
+  "version": "1.0.0",
+  "description": "TZ Services to CRUD video listings, subscriptions, and users",
+  "main": "server/index.js",
+  "engines": {
+    "node": "9.4.0"
+  },
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "build": "babel input.js",
+    "test": "nyc ./node_modules/mocha/bin/_mocha --timeout 10000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archana-nayak/tz-inventory.git"
+  },
+  "author": "archana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/archana-nayak/tz-inventory/issues"
+  },
+  "homepage": "https://github.com/archana-nayak/tz-inventory#readme",
+  "devDependencies": {
+    "chai": "4.1.1",
+    "chai-http": "^3.0.0",
+    "mocha": "3.5.0",
+    "nyc": "^11.4.1",
+    "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "bookshelf": "^0.12.1",
+    "csv-stringify": "^2.0.1",
+    "express": "^4.16.2",
+    "faker": "^4.1.0",
+    "knex": "^0.14.2",
+    "newrelic": "^2.7.0",
+    "node-fetch": "^2.0.0",
+    "nodemon": "^1.14.11",
+    "pg": "^7.4.1",
+    "pg-copy-streams": "^1.2.0",
+    "randomstring": "^1.1.5",
+    "redis": "^2.8.0",
+    "request": "^2.83.0"
+  }
+}
